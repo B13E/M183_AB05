@@ -31,3 +31,30 @@ const serverPort = process.env.PORT || 3000;
 server.listen(serverPort, () => {
   console.log(`Express Server started on port ${serverPort}`);
 });
+
+// Nach erfolgreichem Login:
+fetch('/api/generate-keys')
+    .then(response => response.json())
+    .then(keys => {
+        localStorage.setItem('publicKey', keys.publicKey);
+        localStorage.setItem('privateKey', keys.privateKey);
+    });
+
+    // Nach erfolgreichem Login:
+fetch('/api/generate-keys')
+.then(response => response.json())
+.then(keys => {
+    localStorage.setItem('publicKey', keys.publicKey);
+    localStorage.setItem('privateKey', keys.privateKey);
+});
+
+const JSEncrypt = require('jsencrypt').JSEncrypt;
+const encrypt = new JSEncrypt();
+encrypt.setPublicKey(localStorage.getItem('publicKey'));
+
+const encryptedContent = encrypt.encrypt("Ihr Postinhalt hier");
+
+const decrypt = new JSEncrypt();
+decrypt.setPrivateKey(localStorage.getItem('privateKey'));
+
+const decryptedContent = decrypt.decrypt(encryptedServerContent);
